@@ -4,6 +4,8 @@ import { UpdateReportDto } from './dto/update-report.dto';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Report } from './entities/report.entity';
 import { Repository } from 'typeorm';
+import { QueryReportDto } from './dto/query-report.dto';
+import { User } from 'src/user/entities/user.entity';
 
 @Injectable()
 export class ReportService {
@@ -11,25 +13,22 @@ export class ReportService {
     @InjectRepository(Report) private readonly repo: Repository<Report>,
   ) {}
 
-  create(createReportDto: CreateReportDto) {
+  create(createReportDto: CreateReportDto, user: User) {
     const report = this.repo.create(createReportDto);
+    report.user = user;
     return this.repo.save(report);
   }
 
-  findAll(where: Partial<Report>) {
-    return this.repo.find({ where });
+  findAll(where: QueryReportDto) {
+    return this.repo.find({ where, relations: ['user'] });
   }
 
-  async findOne(where: Partial<Report>) {
-    const report = await this.repo.findOne({ where });
+  async findOneById(id: number) {
+    const report = await this.repo.find({ where: { id }, relations: ['user'] });
 
     if (!report) throw new NotFoundException('Report not found');
 
     return report;
-  }
-
-  findOneById(id: number) {
-    return this.findOne({ id });
   }
 
   async update(id: number, updateReportDto: UpdateReportDto) {

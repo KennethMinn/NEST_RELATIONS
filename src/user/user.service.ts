@@ -4,6 +4,7 @@ import { UpdateUserDto } from './dto/update-user.dto';
 import { InjectRepository } from '@nestjs/typeorm';
 import { User } from './entities/user.entity';
 import { Repository } from 'typeorm';
+import { QueryUserDto } from './dto/query-user.dto';
 
 @Injectable()
 export class UserService {
@@ -16,19 +17,16 @@ export class UserService {
     return this.repo.save(user);
   }
 
-  findAll(where: Partial<User>) {
+  findAll(where: QueryUserDto) {
     return this.repo.find({ where });
   }
 
-  async findOne(where: Partial<User>) {
-    const user = await this.repo.findOne({ where });
+  async findOneById(id: number) {
+    const user = await this.repo.findOne({ where: { id } });
+
     if (!user) throw new NotFoundException('User not found');
 
     return user;
-  }
-
-  findOneById(id: number) {
-    return this.findOne({ id });
   }
 
   async update(id: number, updateUserDto: UpdateUserDto) {
