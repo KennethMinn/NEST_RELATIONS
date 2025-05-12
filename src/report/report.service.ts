@@ -4,6 +4,7 @@ import { UpdateReportDto } from './dto/update-report.dto';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Report } from './entities/report.entity';
 import { Repository } from 'typeorm';
+import { QueryReportDto } from './dto/query-report.dto';
 
 @Injectable()
 export class ReportService {
@@ -16,20 +17,16 @@ export class ReportService {
     return this.repo.save(report);
   }
 
-  findAll(where: Partial<Report>) {
+  findAll(where: QueryReportDto) {
     return this.repo.find({ where });
   }
 
-  async findOne(where: Partial<Report>) {
-    const report = await this.repo.findOne({ where });
+  async findOneById(id: number) {
+    const report = await this.repo.findOne({ where: { id } });
 
     if (!report) throw new NotFoundException('Report not found');
 
     return report;
-  }
-
-  findOneById(id: number) {
-    return this.findOne({ id });
   }
 
   async update(id: number, updateReportDto: UpdateReportDto) {

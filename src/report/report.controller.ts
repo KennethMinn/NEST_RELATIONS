@@ -12,6 +12,7 @@ import { ReportService } from './report.service';
 import { CreateReportDto } from './dto/create-report.dto';
 import { UpdateReportDto } from './dto/update-report.dto';
 import { Report } from './entities/report.entity';
+import { QueryReportDto } from './dto/query-report.dto';
 
 @Controller('reports')
 export class ReportController {
@@ -23,13 +24,8 @@ export class ReportController {
   }
 
   @Get()
-  findAll(@Query() query: Partial<Report>) {
+  findAll(@Query() query: QueryReportDto) {
     return this.reportService.findAll(query);
-  }
-
-  @Get()
-  findOne(@Query() query: Partial<Report>) {
-    return this.reportService.findOne(query);
   }
 
   @Get(':id')

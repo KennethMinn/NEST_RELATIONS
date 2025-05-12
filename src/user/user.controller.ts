@@ -12,6 +12,7 @@ import { UserService } from './user.service';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { User } from './entities/user.entity';
+import { QueryUserDto } from './dto/query-user.dto';
 
 @Controller('users')
 export class UserController {
@@ -23,13 +24,8 @@ export class UserController {
   }
 
   @Get()
-  findAll(@Query() query: Partial<User>) {
+  findAll(@Query() query: QueryUserDto) {
     return this.userService.findAll(query);
-  }
-
-  @Get('user')
-  findOne(@Query() query: Partial<User>) {
-    return this.userService.findOne(query);
   }
 
   @Get(':id')
